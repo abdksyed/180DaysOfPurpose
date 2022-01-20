@@ -13,7 +13,8 @@ function Checkout() {
     useEffect(() => {
         setUsername(localStorage.getItem("username"));
         const data = {
-            userId: localStorage.getItem("userId")
+            userId: localStorage.getItem("userId"),
+            token: localStorage.getItem("token")
         };
 
         axios.post(BASE_URL + '/api/v1/order/details', data)
@@ -31,7 +32,8 @@ function Checkout() {
         const data = {
             orderId: orderDetails.orderId,
             userId: localStorage.getItem('userId'),
-            payment: true
+            payment: true,
+            token: localStorage.getItem("token")
         };
 
         axios.post(BASE_URL + '/api/v1/order/edit', data)
@@ -43,6 +45,14 @@ function Checkout() {
             .catch(function (error) {
                 console.log(error);
             });
+    }
+
+    const logoutFn = () => {
+        localStorage.removeItem('username');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token')
+
+        window.location.href = "/";
     }
 
     return (
@@ -58,7 +68,7 @@ function Checkout() {
                                 <Link className="text-decoration-none" to={"/account"}>Account</Link>
                                 <Link className="text-decoration-none" to={"/cart"}>Cart</Link>
                                 <div className="user-intro">Hi {username}</div>
-                                <div className="logout-btn">Logout</div>
+                                <div className="logout-btn" onClick={logoutFn}>Logout</div>
                             </div>
                         </div>
                     </div>

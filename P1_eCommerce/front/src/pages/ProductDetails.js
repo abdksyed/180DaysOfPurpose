@@ -14,7 +14,8 @@ function ProductDetails() {
         const productId = window.location.pathname.split('/')[2];
         const data = {
             productId,
-            userId: localStorage.getItem("userId")
+            userId: localStorage.getItem("userId"),
+            token: localStorage.getItem("token")
         };
 
         axios.post(BASE_URL + '/api/v1/product/details', data)
@@ -32,7 +33,8 @@ function ProductDetails() {
         const productId = window.location.pathname.split('/')[2];
         const data = {
             productId,
-            userId: localStorage.getItem("userId")
+            userId: localStorage.getItem("userId"),
+            token: localStorage.getItem("token")
         };
 
         axios.post(BASE_URL + '/api/v1/order/add', data)
@@ -44,6 +46,14 @@ function ProductDetails() {
             .catch(function (error) {
                 console.log(error);
             });
+    }
+
+    const logoutFn = () => {
+        localStorage.removeItem('username');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token')
+
+        window.location.href = "/";
     }
 
     return (
@@ -59,7 +69,7 @@ function ProductDetails() {
                                 <Link className="text-decoration-none" to={"/account"}>Account</Link>
                                 <Link className="text-decoration-none" to={"/cart"}>Cart</Link>
                                 <div className="user-intro">Hi {username}</div>
-                                <div className="logout-btn">Logout</div>
+                                <div className="logout-btn" onClick={logoutFn}>Logout</div>
                             </div>
                         </div>
                     </div>

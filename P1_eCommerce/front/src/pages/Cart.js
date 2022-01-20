@@ -20,7 +20,8 @@ function Cart() {
             productId,
             quantity: e.target.value,
             orderId: orderDetails.orderId,
-            userId: localStorage.getItem('userId')
+            userId: localStorage.getItem('userId'),
+            token: localStorage.getItem("token")
         };
 
         axios.post(BASE_URL + '/api/v1/order/edit', data)
@@ -40,7 +41,8 @@ function Cart() {
             quantity,
             orderId: orderDetails.orderId,
             userId: localStorage.getItem('userId'),
-            remove: true
+            remove: true,
+            token: localStorage.getItem("token")
         };
 
         axios.post(BASE_URL + '/api/v1/order/edit', data)
@@ -57,7 +59,8 @@ function Cart() {
 
     const fetchOrderDetails = () => {
         const data = {
-            userId: localStorage.getItem("userId")
+            userId: localStorage.getItem("userId"),
+            token: localStorage.getItem("token")
         };
 
         axios.post(BASE_URL + '/api/v1/order/details', data)
@@ -69,6 +72,14 @@ function Cart() {
             .catch(function (error) {
                 console.log(error);
             });
+    }
+
+    const logoutFn = () => {
+        localStorage.removeItem('username');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token')
+
+        window.location.href = "/";
     }
 
     return (
@@ -84,7 +95,7 @@ function Cart() {
                                 <Link className="text-decoration-none" to={"/account"}>Account</Link>
                                 <Link className="text-decoration-none" to={"/cart"}>Cart</Link>
                                 <div className="user-intro">Hi {username}</div>
-                                <div className="logout-btn">Logout</div>
+                                <div className="logout-btn" onClick={logoutFn}>Logout</div>
                             </div>
                         </div>
                     </div>

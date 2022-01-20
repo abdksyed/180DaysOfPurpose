@@ -3,7 +3,7 @@ const sql = require('../services/sqlConnection')
 module.exports = {
 
     listProducts: (data, callback) => {
-        const sql_query = "SELECT ID as prod_id, Name as prod_name, Price as prod_price from Products";
+        let sql_query = "SELECT ID as prod_id, Name as prod_name, Price as prod_price from Products";
         const values = [];
         if (data.categoryId) {
             sql_query += " WHERE CategoryID = ?";
@@ -44,5 +44,33 @@ module.exports = {
         }
 
         sql.executeQuery(sql_query, values, (err, results) => callback(err, results));
+    },
+
+    addProduct: function(data, callback) {
+        const sql_query = "INSERT into Products (Name, Description, Price, VendorID, CategoryID, CreatedAt, UpdatedAt)" +
+                            " VALUES (?, ?, ?, ?, ?, now(), now())";
+        const values = []
+        console.log(data);
+        values.push(data.name);
+        values.push(data.description);
+        values.push(data.price);
+        values.push(data.vendorId);
+        values.push(data.categoryId);
+
+        sql.executeQuery( sql_query, values, (err, result) => callback(err, result) );
+    },
+
+    getProductDetails: (data, callback) => {
+        let sql_query = "SELECT p.name name, p.Price price, p.Description description, \
+                    IF((SELECT COUNT(*) FROM OrderDetails od LEFT JOIN OrderItems oi ON od.ID = oi.OrderID WHERE \
+                    oi.ProductID = p.ID AND od.UserID = ? AND od.OrderStatus = 1) > 0, 1, 0) AS addedToCart FROM Products p \
+                    WHERE p.ID = ? LIMIT 1";
+
+        const values = [];
+        values.push(data.userId);
+        values.push(data.productId);
+
+        sql.executeQuery( sql_query, values, (err, result) => callback(err, result) );
+
     }
 }

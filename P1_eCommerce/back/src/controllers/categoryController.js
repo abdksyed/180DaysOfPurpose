@@ -2,12 +2,13 @@ const { httpCodes } = require('../constants/backendConfig');
 const category = require('../models/category');
 
 module.exports = {
-    listCatergories: (req, res) => {
+    
+    listCategories: function(req, res) {
         const responseData = {
             success: false,
             msg: "Error in fetching categories"
-        }
-        category.listCategories((err, result) => {
+        };
+        category.listCategories(function(err, result){
             if (err) {
                 return res.status(httpCodes.internalServerError).send(responseData);
             }
@@ -18,6 +19,6 @@ module.exports = {
 
                 return res.status(httpCodes.success).send(responseData)
             }
-        })
+        });
     }
 }
